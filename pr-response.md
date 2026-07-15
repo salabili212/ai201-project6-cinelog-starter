@@ -12,18 +12,17 @@
 **How I verified:** Ran the full test suite (`pytest tests/ -v`) — all 4 existing tests still pass, confirming the change didn't break existing behavior.
 
 ## Comment 3 — Missing test
-**What I did:**
-**How I verified:**
+**What I did:** Created `tests/test_watchlist.py` following the same fixture and assertion pattern as `test_collection.py`. Added `test_add_to_watchlist_nonexistent_film_raises`, mirroring `test_add_to_collection_nonexistent_film_raises` — it confirms that calling `add_to_watchlist` with a film_id that doesn't exist raises `FilmNotFoundError` rather than a raw database error.
+**How I verified:** Ran `pytest tests/test_watchlist.py -v` — test passes. Ran the full suite `pytest tests/ -v` to confirm no regressions.
 
 ## Comment 4 — Default visibility
-**My position:**
-**Reasoning:**
-**Tradeoff acknowledged:**
-
+**My position:** Changed the default for `WatchlistEntry.public` from `True` to `False`.
+**Reasoning:** Privacy-by-default is safer for users. A new user adding films to their watchlist may not realize that "public" means visible to others — defaulting to private avoids ever surprising someone with unwanted exposure, and matches conventions used by most similar apps (e.g. private-by-default lists that users explicitly opt in to sharing). Users who want to participate in the community aspect can still opt in by toggling their watchlist to public.
+**Tradeoff acknowledged:** This weakens the community/discovery angle the maintainer explicitly wanted the feature to support — if most users never touch the default, the social feature may see little organic use. I'm prioritizing user trust and avoiding accidental exposure over maximizing default participation in the community feature.
 ## Comment 5 — Sort order
-**My position:**
-**Reasoning:**
-**Engagement with reviewer's point:**
+**My position:** Support multiple sort orders instead of forcing one. Added a `sort_by` parameter to `get_watchlist`, exposed via a `?sort=title` query param on `GET /watchlist/<user_id>`. Default remains `date_added` (newest first) when no param is given.
+**Reasoning:** Defaulting to `date_added` (newest first) keeps behavior consistent with `get_collection`, so users get the same mental model across both views. Allowing `?sort=title` still gives users the benefit of alphabetical browsing for larger watchlists, without forcing everyone into one fixed order.
+**Engagement with reviewer's point:** The reviewer's original alphabetical-only implementation was inconsistent with `get_collection`'s date-based sort. Rather than picking one side, I addressed the inconsistency by making `date_added` the default (matching the rest of the app) while preserving the alphabetical option as an opt-in for users who prefer it.
 
 ## Comment 6 — Rebase
 **What conflicted:**
