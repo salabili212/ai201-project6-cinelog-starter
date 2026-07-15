@@ -13,8 +13,12 @@ watchlist_bp = Blueprint("watchlist", __name__)
 
 @watchlist_bp.route("/<user_id>", methods=["GET"])
 def view_watchlist(user_id):
-    """GET /watchlist/<user_id> — Return the user's watchlist."""
-    films = get_watchlist(user_id)
+    """
+    GET /watchlist/<user_id> — Return the user's watchlist.
+    Optional query param: ?sort=title (default is date_added, newest first)
+    """
+    sort_by = request.args.get("sort", "date_added")
+    films = get_watchlist(user_id, sort_by=sort_by)
     return jsonify(films)
 
 
