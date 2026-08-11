@@ -72,4 +72,4 @@ def get_watchlist(user_id, sort_by="date_added"):
         film_dict["public"] = entry.public
         result.append(film_dict)
 
-    return
+    return result
