@@ -166,4 +166,30 @@ Automated coverage: `pytest tests/ -v` — the watchlist suite covers the nonexi
 
 ## Commit history
 
-![git log --oneline on feature/watchlist](docs/git-log.png)
+`git log --oneline` on `feature/watchlist`, after the interactive rebase and the
+linearization described above. Eighteen commits, every one in conventional format,
+no merge commits anywhere in the history:
+
+```
+b8d98c4 docs: add PR description, stretch write-ups, and get_watchlist follow-up
+c8c86e8 test: cover get_watchlist return values, dedup, visibility, and removal
+4af117a feat: allow callers to set watchlist visibility when adding a film
+613afe2 feat: add remove_from_watchlist service function and endpoint
+d81a72a fix: return the watchlist result list from get_watchlist
+10efabe docs: update film_id docstring to reflect UUID type post-rebase
+7331430 docs: add response for Comment 5 sort order decision
+11b10ed feat: support multiple sort orders for watchlist, default to date_added
+746e879 fix: default watchlist visibility to private and use UUID for film_id
+f4bb0f1 test: add test for add_to_watchlist nonexistent film case
+c2b3055 feat: add deduplication check to add_to_watchlist
+44d716d fix: rename save_to_watchlist to add_to_watchlist for naming convention
+cd166bb chore: add .gitignore
+dbd586d fix: update film retrieval method to use db.session.get in collection and watchlist services
+65cea66 feat: add watchlist model and endpoint
+718a9a8 (main) chore: add .gitignore for generated files
+07ca580 refactor: migrate film IDs from integer to UUID
+014ae54 feat: initial CineLog API with film collection feature
+```
+
+The last three commits are the upstream base. Everything above `718a9a8` is this PR.
+`git log --merges --oneline` returns nothing.
